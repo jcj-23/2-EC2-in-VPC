@@ -44,8 +44,8 @@ resource "aws_default_route_table" "main_vpc_default_rt" {
   default_route_table_id = aws_vpc.main.default_route_table_id
 
   route {
-    cidr_block = "0.0.0.0/0"  # default route
-    gateway_id = aws_internet_gateway.my_web_igw.id
+    cidr_block = "0.0.0.0/0"  # default route #--allows all traffic
+    gateway_id = aws_internet_gateway.my_web_igw.id #--associate to Internet Gateway
   }
   tags = {
     "Name" = "my-default-rt"
@@ -56,7 +56,7 @@ resource "aws_default_route_table" "main_vpc_default_rt" {
 resource "aws_default_security_group" "default_sec_group" {
   vpc_id = aws_vpc.main.id
   ingress {
-    from_port = 22
+    from_port = 22 #--ssh
     to_port = 22
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
@@ -78,8 +78,8 @@ resource "aws_default_security_group" "default_sec_group" {
   egress {
     from_port = 0
     to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    protocol = "-1" #--all protocol
+    cidr_blocks = ["0.0.0.0/0"] #--allows access to all traffic
   }
   tags = {
     "Name" = "Default Security Group"
@@ -92,7 +92,7 @@ resource "aws_instance" "my_vm" {
   instance_type = "t2.micro"
   subnet_id = aws_subnet.web.id
   vpc_security_group_ids = [aws_default_security_group.default_sec_group.id]
-  associate_public_ip_address = true
+  associate_public_ip_address = true #--instance accessible from internet
 
   tags = {
     "Name" = "My EC2 Intance - Amazon Linux 2"
