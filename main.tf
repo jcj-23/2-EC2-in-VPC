@@ -8,7 +8,6 @@ terraform {
 }
 
 # Configure the AWS Provider
-# !!Use your own access and secret keys!!
 provider "aws"{
   region     = "us-west-2"
   
@@ -34,7 +33,7 @@ resource "aws_subnet" "web"{
 
 # Create an Intenet Gateway
 resource "aws_internet_gateway" "my_web_igw" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.main.id #--associate to vpc
   tags = {
     "Name" = "${var.main_vpc_name} IGW"
   }
@@ -94,7 +93,6 @@ resource "aws_instance" "my_vm" {
   subnet_id = aws_subnet.web.id
   vpc_security_group_ids = [aws_default_security_group.default_sec_group.id]
   associate_public_ip_address = true
-  key_name = "production_ssh_key"
 
   tags = {
     "Name" = "My EC2 Intance - Amazon Linux 2"
